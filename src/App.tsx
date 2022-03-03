@@ -156,6 +156,7 @@ function App() {
         {isChangingBudget ? (
           <>
             <button
+              type="button"
               onClick={() => {
                 changeBudget();
                 recalcBudget();
@@ -187,26 +188,29 @@ function App() {
       </div>
 
       <div>
-        <input
-          type="text"
-          name="name"
-          placeholder="Apple"
-          required
-          onChange={(e) => handleChange(e)}
-        />
-        <div>
-          ${" "}
+        <form>
           <input
             type="text"
-            name="price"
-            placeholder="1.00"
-            inputMode="numeric"
+            name="name"
+            placeholder="Apple"
+            required
             onChange={(e) => handleChange(e)}
           />
-        </div>
-        <button type="button" onClick={handleAdd}>
-          Add
-        </button>
+          <div>
+            ${" "}
+            <input
+              type="text"
+              name="price"
+              placeholder="1.00"
+              required
+              inputMode="numeric"
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <button type="button" onClick={handleAdd}>
+            Add
+          </button>
+        </form>
       </div>
 
       <div>
@@ -217,7 +221,7 @@ function App() {
               style={{ backgroundColor: "pink", marginBottom: "1rem" }}
             >
               {isEditing && item.id === editId ? (
-                <>
+                <form>
                   <input
                     type="text"
                     name="name"
@@ -229,6 +233,7 @@ function App() {
                     type="text"
                     name="price"
                     defaultValue={item.price}
+                    required
                     inputMode="numeric"
                     onChange={(e) => handleChange(e)}
                   />
@@ -236,7 +241,7 @@ function App() {
                     {" "}
                     Done{" "}
                   </button>
-                </>
+                </form>
               ) : (
                 <>
                   <p>{item.name}</p>
