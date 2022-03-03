@@ -38,8 +38,7 @@ function App() {
     }
   };
 
-  // price before decimal and after decimal
-  // const [priceState, setPriceState] = useState<Price>({beforeD: "", afterD: ""})
+  // check if input is number
   const checkNum = (): boolean => {
     if (inputItem.price.match(/^[0-9.]*$/) !== null) {
       return true;
@@ -48,26 +47,41 @@ function App() {
     }
   };
 
-  const priceCheck = (): void => {
-    const inputTotal: number = parseFloat(inputItem.price);
+  // change budget
+  const checkBudget = (itemPrice: string, kw: string): void => {
+    const itemPriceNum: number = parseFloat(itemPrice);
     let totalBudget: number = parseFloat(budget);
-    totalBudget -= inputTotal;
+
+    if (kw === "add") {
+      totalBudget -= itemPriceNum;
+    } else if (kw === "edit") {
+      // itemPriceNum === original price
+      // parseFloat(inputItem.price) === new price
+      const def = itemPriceNum - parseFloat(inputItem.price);
+      totalBudget += def;
+    } else if (kw === "delete") {
+      totalBudget += itemPriceNum;
+    }
 
     setBudget(totalBudget.toString());
+  };
 
-    if (totalBudget < 0) {
-      console.log("below budget");
+  // +++++ recalculate budget +++++
+  const recalcBudget = (): void => {
+    if (items.length > 0) {
+      let currentTotal: number = 0;
+      items.map((item): void => {
+        const priceNum = parseFloat(item.price);
+        currentTotal += priceNum;
+      });
+      let totalBudget: number = parseFloat(budget);
+      totalBudget -= currentTotal;
+      setBudget(totalBudget.toString());
     }
   };
 
-  const toFloat = (str: string): number => {
-    return parseFloat(str);
-  };
-
   // items, input field, add item
-  const [items, setItems] = useState<Item[]>([
-    { name: "milk", price: "2.00", id: "707565769708" },
-  ]);
+  const [items, setItems] = useState<Item[]>([]);
 
   const [inputItem, setInputItem] = useState<Item>({
     name: "",
@@ -84,7 +98,7 @@ function App() {
   const handleAdd = (): void => {
     if (checkNum()) {
       inputItem.id = uuid();
-      // priceCheck();
+      checkBudget(inputItem.price, "add");
 
       setItems((prev) => [...prev, inputItem]);
       setInputItem({ name: "", price: "", id: "" });
@@ -106,7 +120,13 @@ function App() {
   const handleEdit = (): void => {
     if (checkNum()) {
       inputItem.id = editId;
-      // priceCheck();
+
+      const originalItem: Item | undefined = items.find(
+        (item) => item.id === editId
+      );
+      if (originalItem && originalItem.price !== inputItem.price) {
+        checkBudget(originalItem.price, "edit");
+      }
 
       setItems((prev) => {
         return prev.map((item) =>
@@ -123,10 +143,7 @@ function App() {
 
   // delete
   const handleDelete = (delItem: Item): void => {
-    // const inputTotal: number = toFloat(delItem.price);
-    // let totalBudget: number = toFloat(budget);
-    // totalBudget += inputTotal;
-    // setBudget(totalBudget.toString());
+    checkBudget(delItem.price, "delete");
 
     setItems((prev) => {
       return prev.filter((item) => item.id !== delItem.id);
@@ -138,10 +155,17 @@ function App() {
       <div>
         {isChangingBudget ? (
           <>
-            <button onClick={changeBudget}>Confirm change</button>
+            <button
+              onClick={() => {
+                changeBudget();
+                recalcBudget();
+              }}
+            >
+              Confirm change
+            </button>
             <input
               type="text"
-              value={budget}
+              defaultValue={budget}
               inputMode="numeric"
               onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
                 setBudget(e.target.value)
