@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 
-type Item = {
-  name: string;
-  beforeD: string;
-  afterD: string;
-  id: string;
-};
-
 // type Item = {
 //   name: string;
-//   price: string;
+//   beforeD: string;
+//   afterD: string;
 //   id: string;
 // };
+
+type Item = {
+  name: string;
+  price: string;
+  id: string;
+};
 
 // type Price = {
 //   beforeD: string;
@@ -41,11 +41,7 @@ function App() {
   // price before decimal and after decimal
   // const [priceState, setPriceState] = useState<Price>({beforeD: "", afterD: ""})
   const checkNum = (): boolean => {
-    const { beforeD, afterD } = inputItem;
-    if (
-      beforeD.match(/^[0-9]*$/) !== null &&
-      afterD.match(/^[0-9]*$/) !== null
-    ) {
+    if (inputItem.price.match(/^[0-9.]*$/) !== null) {
       return true;
     } else {
       return false;
@@ -53,8 +49,7 @@ function App() {
   };
 
   const priceCheck = (): void => {
-    const { beforeD, afterD } = inputItem;
-    const inputTotal: number = parseFloat(`${beforeD}.${afterD}`);
+    const inputTotal: number = parseFloat(inputItem.price);
     let totalBudget: number = parseFloat(budget);
     totalBudget -= inputTotal;
 
@@ -71,17 +66,12 @@ function App() {
 
   // items, input field, add item
   const [items, setItems] = useState<Item[]>([
-    { name: "milk", beforeD: "1", afterD: "00", id: "707565769708" },
+    { name: "milk", price: "2.00", id: "707565769708" },
   ]);
-
-  // const [items, setItems] = useState<Item[]>([
-  //   { name: "milk", price: "2", id: uuid() },
-  // ]);
 
   const [inputItem, setInputItem] = useState<Item>({
     name: "",
-    beforeD: "",
-    afterD: "",
+    price: "",
     id: "",
   });
 
@@ -94,10 +84,10 @@ function App() {
   const handleAdd = (): void => {
     if (checkNum()) {
       inputItem.id = uuid();
-      priceCheck();
+      // priceCheck();
 
       setItems((prev) => [...prev, inputItem]);
-      setInputItem({ name: "", beforeD: "", afterD: "", id: "" });
+      setInputItem({ name: "", price: "", id: "" });
     } else {
       alert("Not a number.");
     }
@@ -116,7 +106,7 @@ function App() {
   const handleEdit = (): void => {
     if (checkNum()) {
       inputItem.id = editId;
-      priceCheck();
+      // priceCheck();
 
       setItems((prev) => {
         return prev.map((item) =>
@@ -124,7 +114,7 @@ function App() {
         );
       });
 
-      setInputItem({ name: "", beforeD: "", afterD: "", id: "" });
+      setInputItem({ name: "", price: "", id: "" });
       setEditId("");
     } else {
       alert("Not a number.");
@@ -133,10 +123,10 @@ function App() {
 
   // delete
   const handleDelete = (delItem: Item): void => {
-    const inputTotal: number = toFloat(`${delItem.beforeD}.${delItem.afterD}`);
-    let totalBudget: number = toFloat(budget);
-    totalBudget += inputTotal;
-    setBudget(totalBudget.toString());
+    // const inputTotal: number = toFloat(delItem.price);
+    // let totalBudget: number = toFloat(budget);
+    // totalBudget += inputTotal;
+    // setBudget(totalBudget.toString());
 
     setItems((prev) => {
       return prev.filter((item) => item.id !== delItem.id);
@@ -184,16 +174,8 @@ function App() {
           ${" "}
           <input
             type="text"
-            name="beforeD"
-            placeholder="1"
-            inputMode="numeric"
-            onChange={(e) => handleChange(e)}
-          />
-          <span>.</span>
-          <input
-            type="text"
-            name="afterD"
-            placeholder="00"
+            name="price"
+            placeholder="1.00"
             inputMode="numeric"
             onChange={(e) => handleChange(e)}
           />
@@ -221,16 +203,8 @@ function App() {
                   />
                   <input
                     type="text"
-                    name="beforeD"
-                    defaultValue={item.beforeD}
-                    inputMode="numeric"
-                    onChange={(e) => handleChange(e)}
-                  />
-                  <span>.</span>
-                  <input
-                    type="text"
-                    name="afterD"
-                    defaultValue={item.afterD}
+                    name="price"
+                    defaultValue={item.price}
                     inputMode="numeric"
                     onChange={(e) => handleChange(e)}
                   />
@@ -242,9 +216,7 @@ function App() {
               ) : (
                 <>
                   <p>{item.name}</p>
-                  <p>
-                    $ {item.beforeD}.{item.afterD}
-                  </p>
+                  <p>$ {item.price}</p>
                   <button type="button" onClick={() => handleIsEditing(item)}>
                     {" "}
                     Edit{" "}
