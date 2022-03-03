@@ -19,8 +19,7 @@ type Item = {
 //   afterD: string;
 // }
 
-// editで変わってなかったら何もしない
-// deleteで値段を戻す
+// .のあとは2桁
 
 function App() {
   // budget
@@ -28,23 +27,6 @@ function App() {
   const [isChangingBudget, setIsChangingBudget] = useState<boolean>(false);
   const changeBudget = (): void => {
     isChangingBudget ? setIsChangingBudget(false) : setIsChangingBudget(true);
-  };
-
-  // reset
-  const handleReset = (): void => {
-    if (window.confirm("Do you want to reset all?")) {
-      setBudget("0.00");
-      setItems([]);
-    }
-  };
-
-  // check if input is number
-  const checkNum = (): boolean => {
-    if (inputItem.price.match(/^[0-9.]*$/) !== null) {
-      return true;
-    } else {
-      return false;
-    }
   };
 
   // change budget
@@ -56,8 +38,8 @@ function App() {
       totalBudget -= itemPriceNum;
     } else if (kw === "edit") {
       // itemPriceNum === original price
-      // parseFloat(inputItem.price) === new price
-      const def = itemPriceNum - parseFloat(inputItem.price);
+      // parseFloat(editItem.price) === new price
+      const def = itemPriceNum - parseFloat(editItem.price);
       totalBudget += def;
     } else if (kw === "delete") {
       totalBudget += itemPriceNum;
@@ -80,6 +62,14 @@ function App() {
     }
   };
 
+  // reset
+  const handleReset = (): void => {
+    if (window.confirm("Do you want to reset all?")) {
+      setBudget("0.00");
+      setItems([]);
+    }
+  };
+
   // items, input field, add item
   const [items, setItems] = useState<Item[]>([]);
 
@@ -89,14 +79,32 @@ function App() {
     id: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    kw: string
+  ): void => {
     const { name, value } = e.target;
 
-    setInputItem((prev) => ({ ...prev, [name]: value }));
+    if (kw === "add") {
+      setInputItem((prev) => ({ ...prev, [name]: value }));
+    } else if (kw === "edit") {
+      setEditItem((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  const handleAdd = (): void => {
-    if (checkNum()) {
+  // check if input is number
+  const checkNum = (price: string): boolean => {
+    if (price.match(/^[0-9.]*$/) !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const handleAdd = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+
+    if (checkNum(inputItem.price)) {
       inputItem.id = uuid();
       checkBudget(inputItem.price, "add");
 
@@ -109,33 +117,35 @@ function App() {
 
   // edit
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editId, setEditId] = useState<string>("");
+  const [editItem, setEditItem] = useState<Item>({
+    name: "",
+    price: "",
+    id: "",
+  });
 
-  const handleIsEditing = (editItem: Item): void => {
+  const handleIsEditing = (item: Item): void => {
     isEditing ? setIsEditing(false) : setIsEditing(true);
-    setEditId(editItem.id);
-    setInputItem({ ...editItem });
+    setEditItem({ ...item });
   };
 
-  const handleEdit = (): void => {
-    if (checkNum()) {
-      inputItem.id = editId;
+  const handleEdit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
 
+    if (checkNum(editItem.price)) {
       const originalItem: Item | undefined = items.find(
-        (item) => item.id === editId
+        (item) => item.id === editItem.id
       );
-      if (originalItem && originalItem.price !== inputItem.price) {
+      if (originalItem && originalItem.price !== editItem.price) {
         checkBudget(originalItem.price, "edit");
       }
 
       setItems((prev) => {
         return prev.map((item) =>
-          item.id === editId ? { ...inputItem } : item
+          item.id === editItem.id ? { ...editItem } : item
         );
       });
 
-      setInputItem({ name: "", price: "", id: "" });
-      setEditId("");
+      setEditItem({ name: "", price: "", id: "" });
     } else {
       alert("Not a number.");
     }
@@ -188,13 +198,14 @@ function App() {
       </div>
 
       <div>
-        <form>
+        <form onSubmit={(e) => handleAdd(e)}>
           <input
             type="text"
             name="name"
             placeholder="Apple"
+            value={inputItem.name}
             required
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChange(e, "add")}
           />
           <div>
             ${" "}
@@ -202,14 +213,13 @@ function App() {
               type="text"
               name="price"
               placeholder="1.00"
+              value={inputItem.price}
               required
               inputMode="numeric"
-              onChange={(e) => handleChange(e)}
+              onChange={(e) => handleChange(e, "add")}
             />
           </div>
-          <button type="button" onClick={handleAdd}>
-            Add
-          </button>
+          <button type="submit">Add</button>
         </form>
       </div>
 
@@ -220,14 +230,14 @@ function App() {
               key={item.id}
               style={{ backgroundColor: "pink", marginBottom: "1rem" }}
             >
-              {isEditing && item.id === editId ? (
-                <form>
+              {isEditing && item.id === editItem.id ? (
+                <form onSubmit={(e) => handleEdit(e)}>
                   <input
                     type="text"
                     name="name"
                     defaultValue={item.name}
                     required
-                    onChange={(e) => handleChange(e)}
+                    onChange={(e) => handleChange(e, "edit")}
                   />
                   <input
                     type="text"
@@ -235,12 +245,9 @@ function App() {
                     defaultValue={item.price}
                     required
                     inputMode="numeric"
-                    onChange={(e) => handleChange(e)}
+                    onChange={(e) => handleChange(e, "edit")}
                   />
-                  <button type="button" onClick={() => handleEdit()}>
-                    {" "}
-                    Done{" "}
-                  </button>
+                  <button type="submit"> Done </button>
                 </form>
               ) : (
                 <>
