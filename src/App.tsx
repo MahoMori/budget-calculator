@@ -1,25 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { v4 as uuid } from "uuid";
-
-// type Item = {
-//   name: string;
-//   beforeD: string;
-//   afterD: string;
-//   id: string;
-// };
 
 type Item = {
   name: string;
   price: string;
   id: string;
 };
-
-// type Price = {
-//   beforeD: string;
-//   afterD: string;
-// }
-
-// .のあとは2桁
 
 function App() {
   // budget
@@ -167,6 +153,22 @@ function App() {
     setEditItem({ ...item });
   };
 
+  // +++++ close editing mode when budget input, add name input, add price input are on focus +++++
+  // const budgetInputRef = useRef();
+  // const addNameInputRef = useRef();
+  // const addPriceInputRef = useRef();
+
+  // const handleIsOnFocus = (): void => {
+  //   console.log(document.activeElement, budgetInputRef.current);
+  //   if (
+  //     document.activeElement === budgetInputRef.current ||
+  //     document.activeElement === addNameInputRef.current ||
+  //     document.activeElement === addPriceInputRef.current
+  //   ) {
+  //     setIsEditing(false);
+  //   }
+  // };
+
   const handleEdit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const checkedNum = checkNum(editItem.price);
@@ -220,6 +222,8 @@ function App() {
               type="text"
               defaultValue={budget}
               inputMode="numeric"
+              // ref="budgetInputRef"
+              // onClick={handleIsOnFocus}
               onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
                 setBudget(e.target.value)
               }
@@ -247,6 +251,8 @@ function App() {
             placeholder="Apple"
             value={inputItem.name}
             required
+            // ref="addNameInputRef"
+            // onClick={handleIsOnFocus}
             onChange={(e) => handleChange(e, "add")}
           />
           <div>
@@ -257,7 +263,9 @@ function App() {
               placeholder="1.00"
               value={inputItem.price}
               required
-              inputMode="numeric"
+              // inputMode="numeric"
+              // ref="addPriceInputRef"
+              // onClick={handleIsOnFocus}
               onChange={(e) => handleChange(e, "add")}
             />
           </div>
