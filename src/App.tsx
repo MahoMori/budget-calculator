@@ -45,7 +45,7 @@ function App() {
       totalBudget += itemPriceNum;
     }
 
-    setBudget(totalBudget.toString());
+    setBudget(addZero(totalBudget.toString()));
   };
 
   // +++++ recalculate budget +++++
@@ -93,54 +93,50 @@ function App() {
   };
 
   // +++++ check if input is number or . +++++
-  // +++++ add . and 0 accordingly +++++
   const checkNum = (price: string): string => {
-    // +++++ check if input is number or . +++++
     if (price.match(/^[0-9.]*$/) !== null) {
-      const arr = price.split(".");
-
-      switch (arr.length) {
-        // +++++ no decimal (ex. "1", "12") +++++
-        case 1:
-          price += ".00";
-          return price;
-
-        case 2:
-          // +++++ one digit after decimal (ex. "1.9", "12.8") +++++
-          if (arr[1].length === 1) {
-            price += "0";
-          }
-          // +++++ no digit after decimal (ex. "1.", "12.") +++++
-          else if (arr[1].length === 0) {
-            price += "00";
-          }
-          // +++++ more than 2 digits after decimal (ex. "1.988", "12.8653") +++++
-          else if (arr[1].length > 2) {
-            return "NaN";
-          }
-
-          // +++++ no digit before decimal (ex. ".1", ".12") +++++
-          if (arr[0].length === 0) {
-            price = "0" + price;
-          }
-          return price;
-
-        // +++++ more than one decimal (ex. "1..", "1.2.") +++++
-        default:
-          return "NaN";
-      }
+      return addZero(price);
     } else {
       return "NaN";
     }
   };
 
-  // const checkNum = (price: string): boolean => {
-  //   if (price.match(/^[0-9.]*$/) !== null) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // };
+  // +++++ add . and 0 accordingly +++++
+  const addZero = (price: string): string => {
+    // +++++ check if input is number or . +++++
+    const arr = price.split(".");
+
+    switch (arr.length) {
+      // +++++ no decimal (ex. "1", "12") +++++
+      case 1:
+        price += ".00";
+        return price;
+
+      case 2:
+        // +++++ one digit after decimal (ex. "1.9", "12.8") +++++
+        if (arr[1].length === 1) {
+          price += "0";
+        }
+        // +++++ no digit after decimal (ex. "1.", "12.") +++++
+        else if (arr[1].length === 0) {
+          price += "00";
+        }
+        // +++++ more than 2 digits after decimal (ex. "1.988", "12.8653") +++++
+        else if (arr[1].length > 2) {
+          return "NaN";
+        }
+
+        // +++++ no digit before decimal (ex. ".1", ".12") +++++
+        if (arr[0].length === 0) {
+          price = "0" + price;
+        }
+        return price;
+
+      // +++++ more than one decimal (ex. "1..", "1.2.") +++++
+      default:
+        return "NaN";
+    }
+  };
 
   const handleAdd = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
