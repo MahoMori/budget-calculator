@@ -92,26 +92,69 @@ function App() {
     }
   };
 
-  // check if input is number
-  const checkNum = (price: string): boolean => {
+  // +++++ check if input is number or . +++++
+  // +++++ add . and 0 accordingly +++++
+  const checkNum = (price: string): string => {
+    // +++++ check if input is number or . +++++
     if (price.match(/^[0-9.]*$/) !== null) {
-      return true;
+      const arr = price.split(".");
+
+      switch (arr.length) {
+        // +++++ no decimal (ex. "1", "12") +++++
+        case 1:
+          price += ".00";
+          return price;
+
+        case 2:
+          // +++++ one digit after decimal (ex. "1.9", "12.8") +++++
+          if (arr[1].length === 1) {
+            price += "0";
+          }
+          // +++++ no digit after decimal (ex. "1.", "12.") +++++
+          else if (arr[1].length === 0) {
+            price += "00";
+          }
+          // +++++ more than 2 digits after decimal (ex. "1.988", "12.8653") +++++
+          else if (arr[1].length > 2) {
+            return "NaN";
+          }
+
+          // +++++ no digit before decimal (ex. ".1", ".12") +++++
+          if (arr[0].length === 0) {
+            price = "0" + price;
+          }
+          return price;
+
+        // +++++ more than one decimal (ex. "1..", "1.2.") +++++
+        default:
+          return "NaN";
+      }
     } else {
-      return false;
+      return "NaN";
     }
   };
 
+  // const checkNum = (price: string): boolean => {
+  //   if (price.match(/^[0-9.]*$/) !== null) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // };
+
   const handleAdd = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    const checkedNum = checkNum(inputItem.price);
 
-    if (checkNum(inputItem.price)) {
+    if (checkedNum !== "NaN") {
+      inputItem.price = checkedNum;
       inputItem.id = uuid();
       checkBudget(inputItem.price, "add");
 
       setItems((prev) => [...prev, inputItem]);
       setInputItem({ name: "", price: "", id: "" });
     } else {
-      alert("Not a number.");
+      alert("Not a valid input.");
     }
   };
 
@@ -130,8 +173,11 @@ function App() {
 
   const handleEdit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    const checkedNum = checkNum(editItem.price);
 
-    if (checkNum(editItem.price)) {
+    if (checkedNum !== "NaN") {
+      editItem.price = checkedNum;
+
       const originalItem: Item | undefined = items.find(
         (item) => item.id === editItem.id
       );
@@ -147,7 +193,7 @@ function App() {
 
       setEditItem({ name: "", price: "", id: "" });
     } else {
-      alert("Not a number.");
+      alert("Not a valid input.");
     }
   };
 
