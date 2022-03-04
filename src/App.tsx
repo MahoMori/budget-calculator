@@ -1,5 +1,11 @@
 import React, { useState, useRef } from "react";
 import { v4 as uuid } from "uuid";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPenFancy,
+  faCheck,
+  faCircleMinus,
+} from "@fortawesome/free-solid-svg-icons";
 
 type Item = {
   name: string;
@@ -206,115 +212,126 @@ function App() {
 
   return (
     <div className="App">
-      <div>
-        {isChangingBudget ? (
-          <>
-            <button
-              type="button"
-              onClick={() => {
-                changeBudget();
-                recalcBudget();
-              }}
-            >
-              Confirm change
-            </button>
-            <input
-              type="text"
-              defaultValue={budget}
-              inputMode="numeric"
-              // ref="budgetInputRef"
-              // onClick={handleIsOnFocus}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-                setBudget(e.target.value)
-              }
-            />
-          </>
-        ) : (
-          <>
-            <button type="button" onClick={changeBudget}>
-              Change budget
-            </button>
-
-            <p>$ {budget}</p>
-          </>
-        )}
-        <button type="button" onClick={handleReset}>
-          Reset
-        </button>
-      </div>
-
-      <div>
-        <form onSubmit={(e) => handleAdd(e)}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Apple"
-            value={inputItem.name}
-            required
-            // ref="addNameInputRef"
-            // onClick={handleIsOnFocus}
-            onChange={(e) => handleChange(e, "add")}
-          />
+      <main>
+        <section>
           <div>
-            ${" "}
-            <input
-              type="text"
-              name="price"
-              placeholder="1.00"
-              value={inputItem.price}
-              required
-              // inputMode="numeric"
-              // ref="addPriceInputRef"
-              // onClick={handleIsOnFocus}
-              onChange={(e) => handleChange(e, "add")}
-            />
-          </div>
-          <button type="submit">Add</button>
-        </form>
-      </div>
-
-      <div>
-        {items.length > 0 &&
-          items.map((item) => (
-            <div
-              key={item.id}
-              style={{ backgroundColor: "pink", marginBottom: "1rem" }}
-            >
-              {isEditing && item.id === editItem.id ? (
-                <form onSubmit={(e) => handleEdit(e)}>
-                  <input
-                    type="text"
-                    name="name"
-                    defaultValue={item.name}
-                    required
-                    onChange={(e) => handleChange(e, "edit")}
-                  />
-                  <input
-                    type="text"
-                    name="price"
-                    defaultValue={item.price}
-                    required
-                    inputMode="numeric"
-                    onChange={(e) => handleChange(e, "edit")}
-                  />
-                  <button type="submit"> Done </button>
-                </form>
-              ) : (
-                <>
-                  <p>{item.name}</p>
-                  <p>$ {item.price}</p>
-                  <button type="button" onClick={() => handleIsEditing(item)}>
-                    {" "}
-                    Edit{" "}
-                  </button>
-                </>
-              )}
-              <button type="button" onClick={() => handleDelete(item)}>
-                Delete
+            {isChangingBudget ? (
+              <button
+                type="button"
+                onClick={() => {
+                  changeBudget();
+                  recalcBudget();
+                }}
+              >
+                Confirm change
               </button>
-            </div>
-          ))}
-      </div>
+            ) : (
+              <button type="button" onClick={changeBudget}>
+                Change budget
+              </button>
+            )}
+            <button type="button" onClick={handleReset}>
+              Reset
+            </button>
+          </div>
+
+          <div>
+            {isChangingBudget ? (
+              <>
+                <span>$ </span>
+                <input
+                  type="text"
+                  defaultValue={budget}
+                  inputMode="numeric"
+                  // ref="budgetInputRef"
+                  // onClick={handleIsOnFocus}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+                    setBudget(e.target.value)
+                  }
+                />
+              </>
+            ) : (
+              <p>$ {budget}</p>
+            )}
+          </div>
+        </section>
+
+        <section>
+          <div>
+            <form onSubmit={(e) => handleAdd(e)}>
+              <div>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Apple"
+                  value={inputItem.name}
+                  required
+                  // ref="addNameInputRef"
+                  // onClick={handleIsOnFocus}
+                  onChange={(e) => handleChange(e, "add")}
+                />
+                ${" "}
+                <input
+                  type="text"
+                  name="price"
+                  placeholder="1.00"
+                  value={inputItem.price}
+                  required
+                  // inputMode="numeric"
+                  // ref="addPriceInputRef"
+                  // onClick={handleIsOnFocus}
+                  onChange={(e) => handleChange(e, "add")}
+                />
+              </div>
+              <button type="submit">Add</button>
+            </form>
+          </div>
+
+          <div>
+            {items.length > 0 &&
+              items.map((item) => (
+                <div key={item.id}>
+                  {isEditing && item.id === editItem.id ? (
+                    <form onSubmit={(e) => handleEdit(e)}>
+                      <input
+                        type="text"
+                        name="name"
+                        defaultValue={item.name}
+                        required
+                        onChange={(e) => handleChange(e, "edit")}
+                      />
+                      <input
+                        type="text"
+                        name="price"
+                        defaultValue={item.price}
+                        required
+                        inputMode="numeric"
+                        onChange={(e) => handleChange(e, "edit")}
+                      />
+                      <button type="submit">
+                        <FontAwesomeIcon icon={faCheck} />
+                      </button>
+                    </form>
+                  ) : (
+                    <>
+                      <p>{item.name}</p>
+                      <p>$ {item.price}</p>
+                      <button
+                        type="button"
+                        onClick={() => handleIsEditing(item)}
+                      >
+                        <FontAwesomeIcon icon={faPenFancy} />
+                      </button>
+                    </>
+                  )}
+                  <button type="button" onClick={() => handleDelete(item)}>
+                    <FontAwesomeIcon icon={faCircleMinus} />
+                  </button>
+                </div>
+              ))}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
