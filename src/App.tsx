@@ -1,11 +1,14 @@
 import React, { useState, useRef } from "react";
 import { v4 as uuid } from "uuid";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPenFancy,
   faCheck,
   faCircleMinus,
 } from "@fortawesome/free-solid-svg-icons";
+
+import { BudgetCalcMain, TitleDiv, BudgetCardDiv } from "./App.style";
 
 type Item = {
   name: string;
@@ -212,30 +215,56 @@ function App() {
 
   return (
     <div className="App">
-      <main>
+      <BudgetCalcMain>
         <section>
-          <div>
-            {isChangingBudget ? (
-              <button
-                type="button"
-                onClick={() => {
-                  changeBudget();
-                  recalcBudget();
-                }}
-              >
-                Confirm change
-              </button>
-            ) : (
-              <button type="button" onClick={changeBudget}>
-                Change budget
-              </button>
-            )}
+          <TitleDiv>
+            <h1>Grocery Budget Calculator</h1>
             <button type="button" onClick={handleReset}>
               Reset
             </button>
-          </div>
+          </TitleDiv>
 
-          <div>
+          <BudgetCardDiv>
+            {isChangingBudget ? (
+              <>
+                <form>
+                  <span>$&nbsp;</span>
+                  <input
+                    type="text"
+                    defaultValue={budget}
+                    inputMode="numeric"
+                    required
+                    // ref="budgetInputRef"
+                    // onClick={handleIsOnFocus}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+                      setBudget(e.target.value)
+                    }
+                  />
+                </form>
+                <button
+                  type="button"
+                  onClick={() => {
+                    changeBudget();
+                    recalcBudget();
+                  }}
+                >
+                  Confirm change
+                </button>
+              </>
+            ) : (
+              <>
+                <p>
+                  <span>$&nbsp;</span>
+                  <span>{budget}</span>
+                </p>
+                <button type="button" onClick={changeBudget}>
+                  Change budget
+                </button>
+              </>
+            )}
+          </BudgetCardDiv>
+
+          {/* <div>
             {isChangingBudget ? (
               <>
                 <span>$ </span>
@@ -253,10 +282,10 @@ function App() {
             ) : (
               <p>$ {budget}</p>
             )}
-          </div>
-        </section>
+          </div> */}
+          {/* </section>
 
-        <section>
+        <section> */}
           <div>
             <form onSubmit={(e) => handleAdd(e)}>
               <div>
@@ -308,30 +337,50 @@ function App() {
                         inputMode="numeric"
                         onChange={(e) => handleChange(e, "edit")}
                       />
-                      <button type="submit">
-                        <FontAwesomeIcon icon={faCheck} />
-                      </button>
+                      <div>
+                        <hr />
+                        <button type="submit">
+                          <FontAwesomeIcon icon={faCheck} />
+                          {/* Done */}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(item)}
+                        >
+                          <FontAwesomeIcon icon={faCircleMinus} />
+                          {/* Delete */}
+                        </button>
+                      </div>
                     </form>
                   ) : (
-                    <>
+                    <div>
                       <p>{item.name}</p>
                       <p>$ {item.price}</p>
-                      <button
-                        type="button"
-                        onClick={() => handleIsEditing(item)}
-                      >
-                        <FontAwesomeIcon icon={faPenFancy} />
-                      </button>
-                    </>
+
+                      <div>
+                        <hr />
+                        <button
+                          type="button"
+                          onClick={() => handleIsEditing(item)}
+                        >
+                          <FontAwesomeIcon icon={faPenFancy} />
+                          {/* Edit */}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(item)}
+                        >
+                          <FontAwesomeIcon icon={faCircleMinus} />
+                          {/* Delete */}
+                        </button>
+                      </div>
+                    </div>
                   )}
-                  <button type="button" onClick={() => handleDelete(item)}>
-                    <FontAwesomeIcon icon={faCircleMinus} />
-                  </button>
                 </div>
               ))}
           </div>
         </section>
-      </main>
+      </BudgetCalcMain>
     </div>
   );
 }
