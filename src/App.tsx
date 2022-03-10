@@ -8,12 +8,20 @@ import {
   faCircleMinus,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { TiDeleteOutline } from "react-icons/ti";
+import { FaCheck } from "react-icons/fa";
+
 import {
   BudgetCalcMain,
   TitleDiv,
   BudgetCardDiv,
   AddCardDiv,
   AddPriceDiv,
+  ItemContainerCardDiv,
+  ItemDetailDiv,
+  ItemIconsDiv,
+  EditIcon,
+  DeleteIcon,
 } from "./App.style";
 
 type Item = {
@@ -295,28 +303,15 @@ function App() {
                     onChange={(e) => handleChange(e, "add")}
                   />
                 </AddPriceDiv>
-
-                {/* <p>$&nbsp;</p>
-                <input
-                  type="text"
-                  name="price"
-                  placeholder="1.00"
-                  value={inputItem.price}
-                  required
-                  // inputMode="numeric"
-                  // ref="addPriceInputRef"
-                  // onClick={handleIsOnFocus}
-                  onChange={(e) => handleChange(e, "add")}
-                /> */}
               </div>
               <button type="submit">Add</button>
             </form>
           </AddCardDiv>
 
-          <div>
+          <ItemContainerCardDiv>
             {items.length > 0 &&
               items.map((item) => (
-                <div key={item.id}>
+                <div key={item.id} className="each-item-div">
                   {isEditing && item.id === editItem.id ? (
                     <form onSubmit={(e) => handleEdit(e)}>
                       <input
@@ -337,45 +332,52 @@ function App() {
                       <div>
                         <hr />
                         <button type="submit">
-                          <FontAwesomeIcon icon={faCheck} />
+                          {/* <FontAwesomeIcon icon={faCheck} /> */}
+                          <FaCheck />
                           {/* Done */}
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(item)}
                         >
-                          <FontAwesomeIcon icon={faCircleMinus} />
+                          {/* <FontAwesomeIcon icon={faCircleMinus} /> */}
                           {/* Delete */}
+                          <TiDeleteOutline />
                         </button>
                       </div>
                     </form>
                   ) : (
-                    <div>
-                      <p>{item.name}</p>
-                      <p>$ {item.price}</p>
+                    <>
+                      <ItemDetailDiv>
+                        <p>{item.name}</p>
+                        <p>$&nbsp;{item.price}</p>
+                      </ItemDetailDiv>
 
-                      <div>
-                        <hr />
+                      <ItemIconsDiv>
+                        {/* <hr /> */}
+                        <span></span>
                         <button
                           type="button"
                           onClick={() => handleIsEditing(item)}
                         >
-                          <FontAwesomeIcon icon={faPenFancy} />
+                          {/* <FontAwesomeIcon icon={faPenFancy} /> */}
                           {/* Edit */}
+                          <EditIcon />
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(item)}
                         >
-                          <FontAwesomeIcon icon={faCircleMinus} />
+                          {/* <FontAwesomeIcon icon={faCircleMinus} /> */}
                           {/* Delete */}
+                          <DeleteIcon />
                         </button>
-                      </div>
-                    </div>
+                      </ItemIconsDiv>
+                    </>
                   )}
                 </div>
               ))}
-          </div>
+          </ItemContainerCardDiv>
         </section>
       </BudgetCalcMain>
     </div>
