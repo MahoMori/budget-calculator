@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { color, addInputStyle, CardDiv } from "./assets/styleVariable";
 
+import { RiEdit2Fill } from "react-icons/ri";
+import { TiDeleteOutline } from "react-icons/ti";
+
 export const BudgetCalcMain = styled.main`
   padding: 1rem;
 `;
@@ -111,4 +114,44 @@ export const AddPriceDiv = styled.div`
     padding: ${addInputStyle.padding};
     font-size: ${addInputStyle.fontSize};
   }
+`;
+
+export const ItemContainerCardDiv = styled(CardDiv)`
+  & .each-item-div:not(:first-child):not(:last-child) {
+    margin: 1.5rem 0;
+  }
+`;
+
+export const ItemDetailDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const ItemIconsDiv = styled.div`
+  display: grid;
+  grid-template-columns: 80% 10% 10%;
+  align-items: center;
+
+  & span {
+    width: 100%;
+    border-top: solid #9a9a9a 2px;
+  }
+
+  & button {
+    background-color: transparent;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+export const EditIcon = styled(RiEdit2Fill)`
+  color: ${color.edit};
+  font-size: 1.25rem;
+`;
+
+export const DeleteIcon = styled(TiDeleteOutline)`
+  color: ${color.delete};
+  font-size: 1.25rem;
 `;
