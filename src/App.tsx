@@ -8,9 +8,6 @@ import {
   faCircleMinus,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { TiDeleteOutline } from "react-icons/ti";
-import { FaCheck } from "react-icons/fa";
-
 import {
   BudgetCalcMain,
   TitleDiv,
@@ -18,8 +15,10 @@ import {
   AddCardDiv,
   AddPriceDiv,
   ItemContainerCardDiv,
+  EditPriceDiv,
   ItemDetailDiv,
   ItemIconsDiv,
+  DoneIcon,
   EditIcon,
   DeleteIcon,
 } from "./App.style";
@@ -321,30 +320,29 @@ function App() {
                         required
                         onChange={(e) => handleChange(e, "edit")}
                       />
-                      <input
-                        type="text"
-                        name="price"
-                        defaultValue={item.price}
-                        required
-                        inputMode="numeric"
-                        onChange={(e) => handleChange(e, "edit")}
-                      />
-                      <div>
-                        <hr />
+                      <EditPriceDiv>
+                        <p>$&nbsp;</p>
+                        <input
+                          type="text"
+                          name="price"
+                          defaultValue={item.price}
+                          required
+                          inputMode="numeric"
+                          onChange={(e) => handleChange(e, "edit")}
+                        />
+                      </EditPriceDiv>
+                      <ItemIconsDiv>
+                        <span></span>
                         <button type="submit">
-                          {/* <FontAwesomeIcon icon={faCheck} /> */}
-                          <FaCheck />
-                          {/* Done */}
+                          <DoneIcon />
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(item)}
                         >
-                          {/* <FontAwesomeIcon icon={faCircleMinus} /> */}
-                          {/* Delete */}
-                          <TiDeleteOutline />
+                          <DeleteIcon />
                         </button>
-                      </div>
+                      </ItemIconsDiv>
                     </form>
                   ) : (
                     <>

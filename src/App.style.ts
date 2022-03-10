@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { color, addInputStyle, CardDiv } from "./assets/styleVariable";
 
+import { FaCheck } from "react-icons/fa";
 import { RiEdit2Fill } from "react-icons/ri";
 import { TiDeleteOutline } from "react-icons/ti";
 
@@ -120,6 +121,25 @@ export const ItemContainerCardDiv = styled(CardDiv)`
   & .each-item-div:not(:first-child):not(:last-child) {
     margin: 1.5rem 0;
   }
+
+  & form input {
+    width: 100%;
+    border-style: ${addInputStyle.borderStyle};
+    border-color: ${color.edit};
+    border-radius: ${addInputStyle.borderRadius};
+    padding: ${addInputStyle.padding};
+    font-size: ${addInputStyle.fontSize};
+  }
+`;
+
+export const EditPriceDiv = styled.div`
+  display: flex;
+  width: 100%;
+  margin: 0.5rem 0;
+
+  & p {
+    font-size: ${addInputStyle.fontSize};
+  }
 `;
 
 export const ItemDetailDiv = styled.div`
@@ -144,6 +164,11 @@ export const ItemIconsDiv = styled.div`
     justify-content: center;
     align-items: center;
   }
+`;
+
+export const DoneIcon = styled(FaCheck)`
+  color: ${color.edit};
+  font-size: 1rem;
 `;
 
 export const EditIcon = styled(RiEdit2Fill)`
