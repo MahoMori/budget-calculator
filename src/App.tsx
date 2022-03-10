@@ -8,7 +8,13 @@ import {
   faCircleMinus,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { BudgetCalcMain, TitleDiv, BudgetCardDiv } from "./App.style";
+import {
+  BudgetCalcMain,
+  TitleDiv,
+  BudgetCardDiv,
+  AddCardDiv,
+  AddPriceDiv,
+} from "./App.style";
 
 type Item = {
   name: string;
@@ -264,29 +270,7 @@ function App() {
             )}
           </BudgetCardDiv>
 
-          {/* <div>
-            {isChangingBudget ? (
-              <>
-                <span>$ </span>
-                <input
-                  type="text"
-                  defaultValue={budget}
-                  inputMode="numeric"
-                  // ref="budgetInputRef"
-                  // onClick={handleIsOnFocus}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-                    setBudget(e.target.value)
-                  }
-                />
-              </>
-            ) : (
-              <p>$ {budget}</p>
-            )}
-          </div> */}
-          {/* </section>
-
-        <section> */}
-          <div>
+          <AddCardDiv>
             <form onSubmit={(e) => handleAdd(e)}>
               <div>
                 <input
@@ -299,7 +283,20 @@ function App() {
                   // onClick={handleIsOnFocus}
                   onChange={(e) => handleChange(e, "add")}
                 />
-                ${" "}
+
+                <AddPriceDiv>
+                  <p>$&nbsp;</p>
+                  <input
+                    type="text"
+                    name="price"
+                    placeholder="1.00"
+                    value={inputItem.price}
+                    required
+                    onChange={(e) => handleChange(e, "add")}
+                  />
+                </AddPriceDiv>
+
+                {/* <p>$&nbsp;</p>
                 <input
                   type="text"
                   name="price"
@@ -310,11 +307,11 @@ function App() {
                   // ref="addPriceInputRef"
                   // onClick={handleIsOnFocus}
                   onChange={(e) => handleChange(e, "add")}
-                />
+                /> */}
               </div>
               <button type="submit">Add</button>
             </form>
-          </div>
+          </AddCardDiv>
 
           <div>
             {items.length > 0 &&

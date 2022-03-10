@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { color, CardDiv } from "./assets/styleVariable";
+import { color, addInputStyle, CardDiv } from "./assets/styleVariable";
 
 export const BudgetCalcMain = styled.main`
   padding: 1rem;
@@ -29,7 +29,7 @@ export const TitleDiv = styled.div`
 export const BudgetCardDiv = styled(CardDiv)`
   display: grid;
   grid-template-columns: 55% 45%;
-  height: 5rem;
+  height: auto;
   align-items: center;
 
   & p,
@@ -46,12 +46,11 @@ export const BudgetCardDiv = styled(CardDiv)`
   }
 
   & form input {
-    width: 7rem;
+    width: 100%;
     border-style: solid;
     border-color: ${color.edit};
     font-size: 1.5rem;
     text-align: right;
-    background-color: #fff;
     border-radius: 0.2rem;
     padding-right: 0.2rem;
   }
@@ -61,13 +60,55 @@ export const BudgetCardDiv = styled(CardDiv)`
     border-radius: 0.5rem;
     background-color: ${color.edit};
     color: #fff;
-    height: 70%;
+    height: 80%;
   }
 `;
 
-// export const ChangeBudgetButton = styled.button`
-//   border: solid ${color.edit} 1px;
-//   border-radius: 0.5rem;
-//   background-color: ${color.edit};
-//   color: #fff;
-// `;
+export const AddCardDiv = styled(CardDiv)`
+  height: auto;
+
+  & form {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    align-items: center;
+  }
+
+  & form div {
+    margin-right: 0.7rem;
+  }
+
+  & form div input {
+    width: 100%;
+    border-style: ${addInputStyle.borderStyle};
+    border-color: ${addInputStyle.borderColor};
+    border-radius: ${addInputStyle.borderRadius};
+    padding: ${addInputStyle.padding};
+    font-size: ${addInputStyle.fontSize};
+  }
+
+  & form button {
+    border: solid ${color.add} 1px;
+    border-radius: 0.5rem;
+    background-color: ${color.add};
+    color: #fff;
+    height: 45%;
+  }
+`;
+
+export const AddPriceDiv = styled.div`
+  display: flex;
+  width: 100%;
+  margin-top: 0.5rem;
+
+  & p {
+    font-size: ${addInputStyle.fontSize};
+  }
+
+  & input {
+    border-style: ${addInputStyle.borderStyle};
+    border-color: ${addInputStyle.borderColor};
+    border-radius: ${addInputStyle.borderRadius};
+    padding: ${addInputStyle.padding};
+    font-size: ${addInputStyle.fontSize};
+  }
+`;

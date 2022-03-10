@@ -7,6 +7,14 @@ export const color = {
   delete: "#e6372c",
 };
 
+export const addInputStyle = {
+  borderStyle: "solid",
+  borderColor: `${color.add}`,
+  borderRadius: "0.2rem",
+  padding: "0 0.2rem",
+  fontSize: "1rem",
+};
+
 export const CardDiv = styled.div`
   margin: 1rem 0;
   box-shadow: 4px 4px 4px rgba(152, 152, 152, 0.25),
