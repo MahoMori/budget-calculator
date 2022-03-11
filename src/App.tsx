@@ -1,13 +1,6 @@
 import React, { useState, useRef } from "react";
 import { v4 as uuid } from "uuid";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPenFancy,
-  faCheck,
-  faCircleMinus,
-} from "@fortawesome/free-solid-svg-icons";
-
 import {
   BudgetCalcMain,
   TitleDiv,
@@ -237,7 +230,7 @@ function App() {
             </button>
           </TitleDiv>
 
-          <BudgetCardDiv>
+          <BudgetCardDiv isOverBudget={parseFloat(budget) < 0 ? true : false}>
             {isChangingBudget ? (
               <>
                 <form>
@@ -266,10 +259,10 @@ function App() {
               </>
             ) : (
               <>
-                <p>
-                  <span>$&nbsp;</span>
-                  <span>{budget}</span>
-                </p>
+                <div>
+                  <p>$&nbsp;</p>
+                  <p>{budget}</p>
+                </div>
                 <button type="button" onClick={changeBudget}>
                   Change budget
                 </button>

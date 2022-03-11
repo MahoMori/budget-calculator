@@ -1,4 +1,14 @@
-const size = {
+type Size = {
+  mobileS: string;
+  mobileM: string;
+  mobileL: string;
+  tablet: string;
+  laptop: string;
+  laptopL: string;
+  desktop: string;
+};
+
+const size: Size = {
   mobileS: "320px",
   mobileM: "375px",
   mobileL: "425px",
@@ -8,7 +18,7 @@ const size = {
   desktop: "2560px",
 };
 
-export const device = {
+export const device: Size = {
   mobileS: `(min-width: ${size.mobileS})`,
   mobileM: `(min-width: ${size.mobileM})`,
   mobileL: `(min-width: ${size.mobileL})`,

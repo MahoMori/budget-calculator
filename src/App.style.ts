@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { color, addInputStyle, CardDiv } from "./assets/styleVariable";
+import { device } from "./assets/screenSize";
 
 import { FaCheck } from "react-icons/fa";
 import { RiEdit2Fill } from "react-icons/ri";
@@ -7,6 +8,29 @@ import { TiDeleteOutline } from "react-icons/ti";
 
 export const BudgetCalcMain = styled.main`
   padding: 1rem;
+
+  @media ${device.tablet} {
+    width: 50%;
+    margin: 0 auto;
+  }
+
+  @media ${device.laptop} {
+    padding: 1.5rem;
+    width: 40%;
+    margin: 0 auto;
+  }
+
+  @media ${device.laptopL} {
+    padding: 2rem;
+    width: 30%;
+    margin: 0 auto;
+  }
+
+  @media ${device.desktop} {
+    padding: 2rem;
+    width: 20%;
+    margin: 0 auto;
+  }
 `;
 
 export const TitleDiv = styled.div`
@@ -30,23 +54,24 @@ export const TitleDiv = styled.div`
   }
 `;
 
-export const BudgetCardDiv = styled(CardDiv)`
+export const BudgetCardDiv = styled(CardDiv)<{ isOverBudget: boolean }>`
   display: grid;
   grid-template-columns: 55% 45%;
   height: auto;
   align-items: center;
 
-  & p,
+  & div,
   & form {
     display: flex;
     margin-right: 0.7rem;
     font-size: 1.5rem;
   }
 
-  & p span:last-child {
-    width: 8rem;
+  & div p:last-child {
+    width: 100%;
     text-align: right;
     border-bottom: solid 2px #000;
+    color: ${(props) => (props.isOverBudget ? `${color.delete}` : "black")};
   }
 
   & form input {
