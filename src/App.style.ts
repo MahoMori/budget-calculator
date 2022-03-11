@@ -16,7 +16,7 @@ export const BudgetCalcMain = styled.main`
 
   @media ${device.laptop} {
     padding: 1.5rem;
-    width: 40%;
+    width: 35%;
     margin: 0 auto;
   }
 
@@ -51,6 +51,7 @@ export const TitleDiv = styled.div`
     border-radius: 0.5rem;
     background-color: #fff;
     color: ${color.reset};
+    cursor: pointer;
   }
 `;
 
@@ -90,6 +91,7 @@ export const BudgetCardDiv = styled(CardDiv)<{ isOverBudget: boolean }>`
     background-color: ${color.edit};
     color: #fff;
     height: 80%;
+    cursor: pointer;
   }
 `;
 
@@ -121,6 +123,7 @@ export const AddCardDiv = styled(CardDiv)`
     background-color: ${color.add};
     color: #fff;
     height: 45%;
+    cursor: pointer;
   }
 `;
 
@@ -188,6 +191,7 @@ export const ItemIconsDiv = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
   }
 `;
 

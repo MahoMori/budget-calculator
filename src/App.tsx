@@ -26,8 +26,12 @@ function App() {
   // budget
   const [budget, setBudget] = useState<string>("0.00");
   const [isChangingBudget, setIsChangingBudget] = useState<boolean>(false);
-  const changeBudget = (): void => {
+
+  let oldBudget: number = 0;
+  const changeBudget = (budget: string): void => {
     isChangingBudget ? setIsChangingBudget(false) : setIsChangingBudget(true);
+    oldBudget = parseFloat(budget);
+    console.log(oldBudget);
   };
 
   // change budget
@@ -51,16 +55,33 @@ function App() {
 
   // +++++ recalculate budget +++++
   const recalcBudget = (): void => {
-    if (items.length > 0) {
-      let currentTotal: number = 0;
-      items.map((item): void => {
-        const priceNum = parseFloat(item.price);
-        currentTotal += priceNum;
-      });
-      let totalBudget: number = parseFloat(budget);
-      totalBudget -= currentTotal;
-      setBudget(totalBudget.toString());
+    let newBudget: number = parseFloat(budget);
+    let currentTotal: number = 0;
+
+    if (oldBudget !== newBudget) {
+      if (items.length > 0) {
+        items.map((item): void => {
+          const priceNum = parseFloat(item.price);
+          currentTotal += priceNum;
+        });
+        newBudget -= currentTotal;
+      }
     }
+
+    setBudget(addZero(newBudget.toString()));
+
+    // if (items.length > 0) {
+    //   let currentTotal: number = 0;
+    //   items.map((item): void => {
+    //     const priceNum = parseFloat(item.price);
+    //     currentTotal += priceNum;
+    //   });
+    //   let totalBudget: number = parseFloat(budget);
+    //   if (totalBudget !== currentTotal) {
+    //     totalBudget -= currentTotal;
+    //     setBudget(addZero(totalBudget.toString()));
+    //   }
+    // }
   };
 
   // reset
@@ -164,8 +185,15 @@ function App() {
   });
 
   const handleIsEditing = (item: Item): void => {
-    isEditing ? setIsEditing(false) : setIsEditing(true);
-    setEditItem({ ...item });
+    if (isEditing === true) {
+      if (editItem.id === item.id) {
+        setIsEditing(false);
+        setEditItem({ name: "", price: "", id: "" });
+      }
+    } else {
+      setIsEditing(true);
+      setEditItem({ ...item });
+    }
   };
 
   // +++++ close editing mode when budget input, add name input, add price input are on focus +++++
@@ -203,8 +231,6 @@ function App() {
           item.id === editItem.id ? { ...editItem } : item
         );
       });
-
-      setEditItem({ name: "", price: "", id: "" });
     } else {
       alert("Not a valid input.");
     }
@@ -217,6 +243,11 @@ function App() {
     setItems((prev) => {
       return prev.filter((item) => item.id !== delItem.id);
     });
+
+    if (isEditing === true) {
+      setIsEditing(false);
+      setEditItem({ name: "", price: "", id: "" });
+    }
   };
 
   return (
@@ -250,7 +281,7 @@ function App() {
                 <button
                   type="button"
                   onClick={() => {
-                    changeBudget();
+                    changeBudget(budget);
                     recalcBudget();
                   }}
                 >
@@ -263,7 +294,7 @@ function App() {
                   <p>$&nbsp;</p>
                   <p>{budget}</p>
                 </div>
-                <button type="button" onClick={changeBudget}>
+                <button type="button" onClick={() => changeBudget(budget)}>
                   Change budget
                 </button>
               </>
@@ -326,7 +357,10 @@ function App() {
                       </EditPriceDiv>
                       <ItemIconsDiv>
                         <span></span>
-                        <button type="submit">
+                        <button
+                          type="submit"
+                          onClick={() => handleIsEditing(item)}
+                        >
                           <DoneIcon />
                         </button>
                         <button
@@ -345,14 +379,11 @@ function App() {
                       </ItemDetailDiv>
 
                       <ItemIconsDiv>
-                        {/* <hr /> */}
                         <span></span>
                         <button
                           type="button"
                           onClick={() => handleIsEditing(item)}
                         >
-                          {/* <FontAwesomeIcon icon={faPenFancy} /> */}
-                          {/* Edit */}
                           <EditIcon />
                         </button>
                         <button
