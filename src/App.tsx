@@ -284,7 +284,7 @@ function App() {
           <BudgetCardDiv isOverBudget={parseFloat(budget) < 0 ? true : false}>
             {isChangingBudget ? (
               <>
-                <form>
+                <div className="changing-budget">
                   <span>$&nbsp;</span>
                   <input
                     type="text"
@@ -297,7 +297,7 @@ function App() {
                       setBudget(e.target.value)
                     }
                   />
-                </form>
+                </div>
                 <button
                   type="button"
                   onClick={() => {
@@ -310,7 +310,7 @@ function App() {
               </>
             ) : (
               <>
-                <div>
+                <div className="showing-budget">
                   <p>$&nbsp;</p>
                   <p>{budget}</p>
                 </div>

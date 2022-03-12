@@ -61,21 +61,21 @@ export const BudgetCardDiv = styled(CardDiv)<{ isOverBudget: boolean }>`
   height: auto;
   align-items: center;
 
-  & div,
-  & form {
+  & .changing-budget,
+  & .showing-budget {
     display: flex;
     margin-right: 0.7rem;
     font-size: 1.5rem;
   }
 
-  & div p:last-child {
+  & .showing-budget p:last-child {
     width: 100%;
     text-align: right;
     border-bottom: solid 2px #000;
     color: ${(props) => (props.isOverBudget ? `${color.delete}` : "black")};
   }
 
-  & form input {
+  & .changing-budget input {
     width: 100%;
     border-style: solid;
     border-color: ${color.edit};
