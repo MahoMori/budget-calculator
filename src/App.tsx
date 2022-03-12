@@ -1,6 +1,15 @@
 import React, { useState, useRef } from "react";
 import { v4 as uuid } from "uuid";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+  changeBudget,
+  addItem,
+  editItem,
+  deleteItem,
+} from "./redux/budgetCalcSlice";
+import { TStore } from "./redux/store";
+
 import {
   BudgetCalcMain,
   TitleDiv,
@@ -23,15 +32,18 @@ type Item = {
 };
 
 function App() {
+  // +++++ redux toolkit +++++
+  const dispatch = useDispatch();
+  const budgetCalcState = useSelector((state: TStore) => state.budgetCalc);
+
   // budget
   const [budget, setBudget] = useState<string>("0.00");
   const [isChangingBudget, setIsChangingBudget] = useState<boolean>(false);
 
   let oldBudget: number = 0;
-  const changeBudget = (budget: string): void => {
+  const handleChangingBudget = (budget: string): void => {
     isChangingBudget ? setIsChangingBudget(false) : setIsChangingBudget(true);
     oldBudget = parseFloat(budget);
-    console.log(oldBudget);
   };
 
   // change budget
@@ -43,8 +55,8 @@ function App() {
       totalBudget -= itemPriceNum;
     } else if (kw === "edit") {
       // itemPriceNum === original price
-      // parseFloat(editItem.price) === new price
-      const def = itemPriceNum - parseFloat(editItem.price);
+      // parseFloat(editingItem.price) === new price
+      const def = itemPriceNum - parseFloat(editingItem.price);
       totalBudget += def;
     } else if (kw === "delete") {
       totalBudget += itemPriceNum;
@@ -69,6 +81,8 @@ function App() {
     }
 
     setBudget(addZero(newBudget.toString()));
+
+    dispatch(changeBudget(addZero(newBudget.toString())));
 
     // if (items.length > 0) {
     //   let currentTotal: number = 0;
@@ -110,7 +124,7 @@ function App() {
     if (kw === "add") {
       setInputItem((prev) => ({ ...prev, [name]: value }));
     } else if (kw === "edit") {
-      setEditItem((prev) => ({ ...prev, [name]: value }));
+      setEditingItem((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -174,11 +188,13 @@ function App() {
     } else {
       alert("Not a valid input.");
     }
+
+    dispatch(addItem(inputItem));
   };
 
   // edit
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editItem, setEditItem] = useState<Item>({
+  const [editingItem, setEditingItem] = useState<Item>({
     name: "",
     price: "",
     id: "",
@@ -186,13 +202,13 @@ function App() {
 
   const handleIsEditing = (item: Item): void => {
     if (isEditing === true) {
-      if (editItem.id === item.id) {
+      if (editingItem.id === item.id) {
         setIsEditing(false);
-        setEditItem({ name: "", price: "", id: "" });
+        setEditingItem({ name: "", price: "", id: "" });
       }
     } else {
       setIsEditing(true);
-      setEditItem({ ...item });
+      setEditingItem({ ...item });
     }
   };
 
@@ -214,23 +230,25 @@ function App() {
 
   const handleEdit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const checkedNum = checkNum(editItem.price);
+    const checkedNum = checkNum(editingItem.price);
 
     if (checkedNum !== "NaN") {
-      editItem.price = checkedNum;
+      editingItem.price = checkedNum;
 
       const originalItem: Item | undefined = items.find(
-        (item) => item.id === editItem.id
+        (item) => item.id === editingItem.id
       );
-      if (originalItem && originalItem.price !== editItem.price) {
+      if (originalItem && originalItem.price !== editingItem.price) {
         checkBudget(originalItem.price, "edit");
       }
 
       setItems((prev) => {
         return prev.map((item) =>
-          item.id === editItem.id ? { ...editItem } : item
+          item.id === editingItem.id ? { ...editingItem } : item
         );
       });
+
+      dispatch(editItem(editingItem));
     } else {
       alert("Not a valid input.");
     }
@@ -246,8 +264,10 @@ function App() {
 
     if (isEditing === true) {
       setIsEditing(false);
-      setEditItem({ name: "", price: "", id: "" });
+      setEditingItem({ name: "", price: "", id: "" });
     }
+
+    dispatch(deleteItem(delItem.id));
   };
 
   return (
@@ -281,7 +301,7 @@ function App() {
                 <button
                   type="button"
                   onClick={() => {
-                    changeBudget(budget);
+                    handleChangingBudget(budget);
                     recalcBudget();
                   }}
                 >
@@ -294,7 +314,10 @@ function App() {
                   <p>$&nbsp;</p>
                   <p>{budget}</p>
                 </div>
-                <button type="button" onClick={() => changeBudget(budget)}>
+                <button
+                  type="button"
+                  onClick={() => handleChangingBudget(budget)}
+                >
                   Change budget
                 </button>
               </>
@@ -335,8 +358,13 @@ function App() {
             {items.length > 0 &&
               items.map((item) => (
                 <div key={item.id} className="each-item-div">
-                  {isEditing && item.id === editItem.id ? (
-                    <form onSubmit={(e) => handleEdit(e)}>
+                  {isEditing && item.id === editingItem.id ? (
+                    <form
+                      onSubmit={(e) => {
+                        handleEdit(e);
+                        handleIsEditing(item);
+                      }}
+                    >
                       <input
                         type="text"
                         name="name"
@@ -359,7 +387,7 @@ function App() {
                         <span></span>
                         <button
                           type="submit"
-                          onClick={() => handleIsEditing(item)}
+                          // onClick={() => handleIsEditing(item)}
                         >
                           <DoneIcon />
                         </button>
