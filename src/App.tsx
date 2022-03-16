@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import ItemComponent from "./ItemComponent";
 
 import { useDispatch, useSelector } from "react-redux";
-import { changeBudget, addItem } from "./redux/budgetCalcSlice";
+import { changeBudget, addItem, resetItems } from "./redux/budgetCalcSlice";
 import { TStore } from "./redux/store";
 
 import {
@@ -68,8 +68,8 @@ function App() {
     let currentTotal: number = 0;
 
     if (oldBudget !== newBudget) {
-      if (items.length > 0) {
-        items.map((item): void => {
+      if (budgetCalcState.items.length > 0) {
+        budgetCalcState.items.map((item): void => {
           const priceNum = parseFloat(item.price);
           currentTotal += priceNum;
         });
@@ -82,17 +82,19 @@ function App() {
     dispatch(changeBudget(addZero(newBudget.toString())));
   };
 
-  // reset
+  // +++++ reset +++++
   const handleReset = (): void => {
     if (window.confirm("Do you want to reset all?")) {
       // setBudget("0.00");
       dispatch(changeBudget("0.00"));
-      setItems([]);
+      dispatch(resetItems());
+
+      // setItems([]);
     }
   };
 
-  // items, input field, add item
-  const [items, setItems] = useState<Item[]>([]);
+  // +++++ items, input field, add item +++++
+  // const [items, setItems] = useState<Item[]>([]);
 
   const [inputItem, setInputItem] = useState<Item>({
     name: "",
@@ -161,13 +163,13 @@ function App() {
       inputItem.id = uuid();
       checkBudget(inputItem.price, "add");
 
-      setItems((prev) => [...prev, inputItem]);
+      // setItems((prev) => [...prev, inputItem]);
+
+      dispatch(addItem(inputItem));
       setInputItem({ name: "", price: "", id: "" });
     } else {
       alert("Not a valid input.");
     }
-
-    dispatch(addItem(inputItem));
   };
 
   return (
@@ -256,13 +258,13 @@ function App() {
           </AddCardDiv>
 
           <ItemContainerCardDiv>
-            {items.length > 0 &&
-              items.map((item) => (
+            {budgetCalcState.items.length > 0 &&
+              budgetCalcState.items.map((item) => (
                 <ItemComponent
                   key={item.id}
                   item={item}
-                  items={items}
-                  setItems={setItems}
+                  // items={items}
+                  // setItems={setItems}
                   checkNum={checkNum}
                   checkBudget={checkBudget}
                 />

@@ -17,8 +17,8 @@ import {
 
 type Props = {
   item: Item;
-  items: Item[];
-  setItems: React.Dispatch<React.SetStateAction<Item[]>>;
+  // items: Item[];
+  // setItems: React.Dispatch<React.SetStateAction<Item[]>>;
   checkNum: (price: string) => string;
   checkBudget: (
     itemPrice: string,
@@ -29,8 +29,8 @@ type Props = {
 
 const ItemComponent: React.VFC<Props> = ({
   item,
-  items,
-  setItems,
+  // items,
+  // setItems,
   checkNum,
   checkBudget,
 }) => {
@@ -70,20 +70,20 @@ const ItemComponent: React.VFC<Props> = ({
     if (checkedNum !== "NaN") {
       editingItem.price = checkedNum;
 
-      const originalItem: Item | undefined = items.find(
+      const originalItem: Item | undefined = budgetCalcState.items.find(
         (item) => item.id === editingItem.id
       );
       if (originalItem && originalItem.price !== editingItem.price) {
         checkBudget(originalItem.price, "edit", checkedNum);
       }
 
-      setItems((prev) => {
-        return prev.map((item) =>
-          item.id === editingItem.id ? { ...editingItem } : item
-        );
-      });
+      // setItems((prev) => {
+      //   return prev.map((item) =>
+      //     item.id === editingItem.id ? { ...editingItem } : item
+      //   );
+      // });
 
-      // dispatch(editItem(editingItem));
+      dispatch(editItem(editingItem));
     } else {
       alert("Not a valid input.");
     }
@@ -93,16 +93,17 @@ const ItemComponent: React.VFC<Props> = ({
   const handleDelete = (delItem: Item): void => {
     checkBudget(delItem.price, "delete");
 
-    setItems((prev) => {
-      return prev.filter((item) => item.id !== delItem.id);
-    });
+    // setItems((prev) => {
+    //   return prev.filter((item) => item.id !== delItem.id);
+    // });
+
+    dispatch(deleteItem(delItem.id));
 
     if (isEditing === true) {
       setIsEditing(false);
       setEditingItem({ name: "", price: "", id: "" });
     }
-
-    // dispatch(deleteItem(delItem.id));
+    
   };
 
   return (

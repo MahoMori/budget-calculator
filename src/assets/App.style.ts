@@ -30,8 +30,6 @@ export const BudgetCalcMain = styled.main`
 `;
 
 export const TitleDiv = styled.div`
-  /* @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk&display=swap"); */
-
   display: grid;
   grid-template-columns: 2fr 1fr;
   align-items: center;

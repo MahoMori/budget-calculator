@@ -46,10 +46,14 @@ export const budgetCalcSlice = createSlice({
       state.items = newItems;
       console.log(state.items);
     },
+
+    resetItems: (state) => {
+      state.items = [];
+    },
   },
 });
 
-export const { changeBudget, addItem, editItem, deleteItem } =
+export const { changeBudget, addItem, editItem, deleteItem, resetItems } =
   budgetCalcSlice.actions;
 
 export default budgetCalcSlice.reducer;
