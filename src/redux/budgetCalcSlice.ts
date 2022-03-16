@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // import type { RootState } from "./store";
+import { Item } from "../App";
 
-type Item = {
-  name: string;
-  price: string;
-  id: string;
-};
+// type Item = {
+//   name: string;
+//   price: string;
+//   id: string;
+// };
 
 type BudgetCalcState = {
   budget: string;

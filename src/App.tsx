@@ -28,13 +28,13 @@ function App() {
   const budgetCalcState = useSelector((state: TStore) => state.budgetCalc);
 
   // +++++ budget +++++
-  const [budget, setBudget] = useState<string>("0.00");
+  const [budget, setBudget] = useState<string>("");
   const [isChangingBudget, setIsChangingBudget] = useState<boolean>(false);
 
   let oldBudget: number = 0;
   const handleChangingBudget = (budget: string): void => {
     isChangingBudget ? setIsChangingBudget(false) : setIsChangingBudget(true);
-    oldBudget = parseFloat(budget);
+    oldBudget = parseFloat(budgetCalcState.budget);
   };
 
   // +++++ change budget +++++
@@ -44,7 +44,7 @@ function App() {
     editingItemPrice?: string
   ): void => {
     const itemPriceNum: number = parseFloat(itemPrice);
-    let totalBudget: number = parseFloat(budget);
+    let totalBudget: number = parseFloat(budgetCalcState.budget);
 
     if (kw === "add") {
       totalBudget -= itemPriceNum;
@@ -57,7 +57,9 @@ function App() {
       totalBudget += itemPriceNum;
     }
 
-    setBudget(addZero(totalBudget.toString()));
+    // setBudget(addZero(totalBudget.toString()));
+
+    dispatch(changeBudget(addZero(totalBudget.toString())));
   };
 
   // +++++ recalculate budget +++++
@@ -75,7 +77,7 @@ function App() {
       }
     }
 
-    setBudget(addZero(newBudget.toString()));
+    // setBudget(addZero(newBudget.toString()));
 
     dispatch(changeBudget(addZero(newBudget.toString())));
   };
@@ -83,7 +85,8 @@ function App() {
   // reset
   const handleReset = (): void => {
     if (window.confirm("Do you want to reset all?")) {
-      setBudget("0.00");
+      // setBudget("0.00");
+      dispatch(changeBudget("0.00"));
       setItems([]);
     }
   };
@@ -178,25 +181,30 @@ function App() {
             </button>
           </TitleDiv>
 
-          <BudgetCardDiv isOverBudget={parseFloat(budget) < 0 ? true : false}>
+          <BudgetCardDiv
+            isOverBudget={parseFloat(budgetCalcState.budget) < 0 ? true : false}
+          >
             {isChangingBudget ? (
               <>
                 <div className="changing-budget">
                   <span>$&nbsp;</span>
                   <input
                     type="text"
-                    defaultValue={budget}
+                    defaultValue={budgetCalcState.budget}
                     inputMode="numeric"
                     required
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-                      setBudget(e.target.value)
-                    }
+                    onChange={(
+                      e: React.ChangeEvent<HTMLInputElement>
+                    ): void => {
+                      setBudget(e.target.value);
+                      // dispatch(changeBudget(e.target.value));
+                    }}
                   />
                 </div>
                 <button
                   type="button"
                   onClick={() => {
-                    handleChangingBudget(budget);
+                    handleChangingBudget(budgetCalcState.budget);
                     recalcBudget();
                   }}
                 >
@@ -207,11 +215,11 @@ function App() {
               <>
                 <div className="showing-budget">
                   <p>$&nbsp;</p>
-                  <p>{budget}</p>
+                  <p>{budgetCalcState.budget}</p>
                 </div>
                 <button
                   type="button"
-                  onClick={() => handleChangingBudget(budget)}
+                  onClick={() => handleChangingBudget(budgetCalcState.budget)}
                 >
                   Change budget
                 </button>
