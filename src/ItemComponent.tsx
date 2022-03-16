@@ -2,6 +2,10 @@ import React, { useState } from "react";
 
 import { Item } from "./App";
 
+import { useDispatch, useSelector } from "react-redux";
+import { editItem, deleteItem } from "./redux/budgetCalcSlice";
+import { TStore } from "./redux/store";
+
 import {
   EditPriceDiv,
   ItemDetailDiv,
@@ -30,6 +34,11 @@ const ItemComponent: React.VFC<Props> = ({
   checkNum,
   checkBudget,
 }) => {
+  // +++++ redux toolkit +++++
+  const dispatch = useDispatch();
+  const budgetCalcState = useSelector((state: TStore) => state.budgetCalc);
+
+  // +++++ edit +++++
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editingItem, setEditingItem] = useState<Item>({
     name: "",

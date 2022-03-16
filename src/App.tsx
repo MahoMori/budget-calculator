@@ -1,15 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 
 import ItemComponent from "./ItemComponent";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  changeBudget,
-  addItem,
-  editItem,
-  deleteItem,
-} from "./redux/budgetCalcSlice";
+import { changeBudget, addItem } from "./redux/budgetCalcSlice";
 import { TStore } from "./redux/store";
 
 import {
@@ -32,7 +27,7 @@ function App() {
   const dispatch = useDispatch();
   const budgetCalcState = useSelector((state: TStore) => state.budgetCalc);
 
-  // budget
+  // +++++ budget +++++
   const [budget, setBudget] = useState<string>("0.00");
   const [isChangingBudget, setIsChangingBudget] = useState<boolean>(false);
 
@@ -42,7 +37,7 @@ function App() {
     oldBudget = parseFloat(budget);
   };
 
-  // change budget
+  // +++++ change budget +++++
   const checkBudget = (
     itemPrice: string,
     kw: string,
@@ -83,19 +78,6 @@ function App() {
     setBudget(addZero(newBudget.toString()));
 
     dispatch(changeBudget(addZero(newBudget.toString())));
-
-    // if (items.length > 0) {
-    //   let currentTotal: number = 0;
-    //   items.map((item): void => {
-    //     const priceNum = parseFloat(item.price);
-    //     currentTotal += priceNum;
-    //   });
-    //   let totalBudget: number = parseFloat(budget);
-    //   if (totalBudget !== currentTotal) {
-    //     totalBudget -= currentTotal;
-    //     setBudget(addZero(totalBudget.toString()));
-    //   }
-    // }
   };
 
   // reset
@@ -115,17 +97,10 @@ function App() {
     id: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    kw: string
-  ): void => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
 
-    if (kw === "add") {
-      setInputItem((prev) => ({ ...prev, [name]: value }));
-    } else if (kw === "edit") {
-      setEditingItem((prev) => ({ ...prev, [name]: value }));
-    }
+    setInputItem((prev) => ({ ...prev, [name]: value }));
   };
 
   // +++++ check if input is number or . +++++
@@ -192,84 +167,6 @@ function App() {
     dispatch(addItem(inputItem));
   };
 
-  // edit
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editingItem, setEditingItem] = useState<Item>({
-    name: "",
-    price: "",
-    id: "",
-  });
-
-  const handleIsEditing = (item: Item): void => {
-    if (isEditing === true) {
-      if (editingItem.id === item.id) {
-        setIsEditing(false);
-        setEditingItem({ name: "", price: "", id: "" });
-      }
-    } else {
-      setIsEditing(true);
-      setEditingItem({ ...item });
-    }
-  };
-
-  // +++++ close editing mode when budget input, add name input, add price input are on focus +++++
-  // const budgetInputRef = useRef();
-  // const addNameInputRef = useRef();
-  // const addPriceInputRef = useRef();
-
-  // const handleIsOnFocus = (): void => {
-  //   console.log(document.activeElement, budgetInputRef.current);
-  //   if (
-  //     document.activeElement === budgetInputRef.current ||
-  //     document.activeElement === addNameInputRef.current ||
-  //     document.activeElement === addPriceInputRef.current
-  //   ) {
-  //     setIsEditing(false);
-  //   }
-  // };
-
-  const handleEdit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    const checkedNum = checkNum(editingItem.price);
-
-    if (checkedNum !== "NaN") {
-      editingItem.price = checkedNum;
-
-      const originalItem: Item | undefined = items.find(
-        (item) => item.id === editingItem.id
-      );
-      if (originalItem && originalItem.price !== editingItem.price) {
-        checkBudget(originalItem.price, "edit");
-      }
-
-      setItems((prev) => {
-        return prev.map((item) =>
-          item.id === editingItem.id ? { ...editingItem } : item
-        );
-      });
-
-      dispatch(editItem(editingItem));
-    } else {
-      alert("Not a valid input.");
-    }
-  };
-
-  // delete
-  const handleDelete = (delItem: Item): void => {
-    checkBudget(delItem.price, "delete");
-
-    setItems((prev) => {
-      return prev.filter((item) => item.id !== delItem.id);
-    });
-
-    if (isEditing === true) {
-      setIsEditing(false);
-      setEditingItem({ name: "", price: "", id: "" });
-    }
-
-    dispatch(deleteItem(delItem.id));
-  };
-
   return (
     <div className="App">
       <BudgetCalcMain>
@@ -291,8 +188,6 @@ function App() {
                     defaultValue={budget}
                     inputMode="numeric"
                     required
-                    // ref="budgetInputRef"
-                    // onClick={handleIsOnFocus}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
                       setBudget(e.target.value)
                     }
@@ -333,9 +228,7 @@ function App() {
                   placeholder="Apple"
                   value={inputItem.name}
                   required
-                  // ref="addNameInputRef"
-                  // onClick={handleIsOnFocus}
-                  onChange={(e) => handleChange(e, "add")}
+                  onChange={(e) => handleChange(e)}
                 />
 
                 <AddPriceDiv>
@@ -346,7 +239,7 @@ function App() {
                     placeholder="1.00"
                     value={inputItem.price}
                     required
-                    onChange={(e) => handleChange(e, "add")}
+                    onChange={(e) => handleChange(e)}
                   />
                 </AddPriceDiv>
               </div>
@@ -365,76 +258,6 @@ function App() {
                   checkNum={checkNum}
                   checkBudget={checkBudget}
                 />
-
-                // <div key={item.id} className="each-item-div">
-                //   {isEditing && item.id === editingItem.id ? (
-                //     <form
-                //       onSubmit={(e) => {
-                //         handleEdit(e);
-                //         handleIsEditing(item);
-                //       }}
-                //     >
-                //       <input
-                //         type="text"
-                //         name="name"
-                //         defaultValue={item.name}
-                //         required
-                //         onChange={(e) => handleChange(e, "edit")}
-                //       />
-                //       <EditPriceDiv>
-                //         <p>$&nbsp;</p>
-                //         <input
-                //           type="text"
-                //           name="price"
-                //           defaultValue={item.price}
-                //           required
-                //           inputMode="numeric"
-                //           onChange={(e) => handleChange(e, "edit")}
-                //         />
-                //       </EditPriceDiv>
-                //       <ItemIconsDiv>
-                //         <span></span>
-                //         <button
-                //           type="submit"
-                //           // onClick={() => handleIsEditing(item)}
-                //         >
-                //           <DoneIcon />
-                //         </button>
-                //         <button
-                //           type="button"
-                //           onClick={() => handleDelete(item)}
-                //         >
-                //           <DeleteIcon />
-                //         </button>
-                //       </ItemIconsDiv>
-                //     </form>
-                //   ) : (
-                //     <>
-                //       <ItemDetailDiv>
-                //         <p>{item.name}</p>
-                //         <p>$&nbsp;{item.price}</p>
-                //       </ItemDetailDiv>
-
-                //       <ItemIconsDiv>
-                //         <span></span>
-                //         <button
-                //           type="button"
-                //           onClick={() => handleIsEditing(item)}
-                //         >
-                //           <EditIcon />
-                //         </button>
-                //         <button
-                //           type="button"
-                //           onClick={() => handleDelete(item)}
-                //         >
-                //           {/* <FontAwesomeIcon icon={faCircleMinus} /> */}
-                //           {/* Delete */}
-                //           <DeleteIcon />
-                //         </button>
-                //       </ItemIconsDiv>
-                //     </>
-                //   )}
-                // </div>
               ))}
           </ItemContainerCardDiv>
         </section>
