@@ -19,13 +19,7 @@ import {
   AddCardDiv,
   AddPriceDiv,
   ItemContainerCardDiv,
-  EditPriceDiv,
-  ItemDetailDiv,
-  ItemIconsDiv,
-  DoneIcon,
-  EditIcon,
-  DeleteIcon,
-} from "./App.style";
+} from "./assets/App.style";
 
 export type Item = {
   name: string;

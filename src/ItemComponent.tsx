@@ -3,19 +3,13 @@ import React, { useState } from "react";
 import { Item } from "./App";
 
 import {
-  //   BudgetCalcMain,
-  //   TitleDiv,
-  //   BudgetCardDiv,
-  //   AddCardDiv,
-  //   AddPriceDiv,
-  //   ItemContainerCardDiv,
   EditPriceDiv,
   ItemDetailDiv,
   ItemIconsDiv,
   DoneIcon,
   EditIcon,
   DeleteIcon,
-} from "./App.style";
+} from "./assets/ItemComponent.style";
 
 type Props = {
   item: Item;
@@ -45,10 +39,8 @@ const ItemComponent: React.VFC<Props> = ({
 
   const handleIsEditing = (item: Item): void => {
     if (isEditing === true) {
-      if (editingItem.id === item.id) {
-        setIsEditing(false);
-        setEditingItem({ name: "", price: "", id: "" });
-      }
+      setIsEditing(false);
+      setEditingItem({ name: "", price: "", id: "" });
     } else {
       setIsEditing(true);
       setEditingItem({ ...item });
@@ -88,7 +80,7 @@ const ItemComponent: React.VFC<Props> = ({
     }
   };
 
-  // delete
+  // +++++ delete +++++
   const handleDelete = (delItem: Item): void => {
     checkBudget(delItem.price, "delete");
 
