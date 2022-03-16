@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 import { v4 as uuid } from "uuid";
 
+import ItemComponent from "./ItemComponent";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeBudget,
@@ -25,7 +27,7 @@ import {
   DeleteIcon,
 } from "./App.style";
 
-type Item = {
+export type Item = {
   name: string;
   price: string;
   id: string;
@@ -47,16 +49,20 @@ function App() {
   };
 
   // change budget
-  const checkBudget = (itemPrice: string, kw: string): void => {
+  const checkBudget = (
+    itemPrice: string,
+    kw: string,
+    editingItemPrice?: string
+  ): void => {
     const itemPriceNum: number = parseFloat(itemPrice);
     let totalBudget: number = parseFloat(budget);
 
     if (kw === "add") {
       totalBudget -= itemPriceNum;
-    } else if (kw === "edit") {
-      // itemPriceNum === original price
-      // parseFloat(editingItem.price) === new price
-      const def = itemPriceNum - parseFloat(editingItem.price);
+    } else if (kw === "edit" && !!editingItemPrice) {
+      // +++++ itemPriceNum === original price +++++
+      // +++++ parseFloat(editingItem.price) === new price +++++
+      const def = itemPriceNum - parseFloat(editingItemPrice);
       totalBudget += def;
     } else if (kw === "delete") {
       totalBudget += itemPriceNum;
@@ -357,75 +363,84 @@ function App() {
           <ItemContainerCardDiv>
             {items.length > 0 &&
               items.map((item) => (
-                <div key={item.id} className="each-item-div">
-                  {isEditing && item.id === editingItem.id ? (
-                    <form
-                      onSubmit={(e) => {
-                        handleEdit(e);
-                        handleIsEditing(item);
-                      }}
-                    >
-                      <input
-                        type="text"
-                        name="name"
-                        defaultValue={item.name}
-                        required
-                        onChange={(e) => handleChange(e, "edit")}
-                      />
-                      <EditPriceDiv>
-                        <p>$&nbsp;</p>
-                        <input
-                          type="text"
-                          name="price"
-                          defaultValue={item.price}
-                          required
-                          inputMode="numeric"
-                          onChange={(e) => handleChange(e, "edit")}
-                        />
-                      </EditPriceDiv>
-                      <ItemIconsDiv>
-                        <span></span>
-                        <button
-                          type="submit"
-                          // onClick={() => handleIsEditing(item)}
-                        >
-                          <DoneIcon />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(item)}
-                        >
-                          <DeleteIcon />
-                        </button>
-                      </ItemIconsDiv>
-                    </form>
-                  ) : (
-                    <>
-                      <ItemDetailDiv>
-                        <p>{item.name}</p>
-                        <p>$&nbsp;{item.price}</p>
-                      </ItemDetailDiv>
+                <ItemComponent
+                  key={item.id}
+                  item={item}
+                  items={items}
+                  setItems={setItems}
+                  checkNum={checkNum}
+                  checkBudget={checkBudget}
+                />
 
-                      <ItemIconsDiv>
-                        <span></span>
-                        <button
-                          type="button"
-                          onClick={() => handleIsEditing(item)}
-                        >
-                          <EditIcon />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(item)}
-                        >
-                          {/* <FontAwesomeIcon icon={faCircleMinus} /> */}
-                          {/* Delete */}
-                          <DeleteIcon />
-                        </button>
-                      </ItemIconsDiv>
-                    </>
-                  )}
-                </div>
+                // <div key={item.id} className="each-item-div">
+                //   {isEditing && item.id === editingItem.id ? (
+                //     <form
+                //       onSubmit={(e) => {
+                //         handleEdit(e);
+                //         handleIsEditing(item);
+                //       }}
+                //     >
+                //       <input
+                //         type="text"
+                //         name="name"
+                //         defaultValue={item.name}
+                //         required
+                //         onChange={(e) => handleChange(e, "edit")}
+                //       />
+                //       <EditPriceDiv>
+                //         <p>$&nbsp;</p>
+                //         <input
+                //           type="text"
+                //           name="price"
+                //           defaultValue={item.price}
+                //           required
+                //           inputMode="numeric"
+                //           onChange={(e) => handleChange(e, "edit")}
+                //         />
+                //       </EditPriceDiv>
+                //       <ItemIconsDiv>
+                //         <span></span>
+                //         <button
+                //           type="submit"
+                //           // onClick={() => handleIsEditing(item)}
+                //         >
+                //           <DoneIcon />
+                //         </button>
+                //         <button
+                //           type="button"
+                //           onClick={() => handleDelete(item)}
+                //         >
+                //           <DeleteIcon />
+                //         </button>
+                //       </ItemIconsDiv>
+                //     </form>
+                //   ) : (
+                //     <>
+                //       <ItemDetailDiv>
+                //         <p>{item.name}</p>
+                //         <p>$&nbsp;{item.price}</p>
+                //       </ItemDetailDiv>
+
+                //       <ItemIconsDiv>
+                //         <span></span>
+                //         <button
+                //           type="button"
+                //           onClick={() => handleIsEditing(item)}
+                //         >
+                //           <EditIcon />
+                //         </button>
+                //         <button
+                //           type="button"
+                //           onClick={() => handleDelete(item)}
+                //         >
+                //           {/* <FontAwesomeIcon icon={faCircleMinus} /> */}
+                //           {/* Delete */}
+                //           <DeleteIcon />
+                //         </button>
+                //       </ItemIconsDiv>
+                //     </>
+                //   )}
+                // </div>
               ))}
           </ItemContainerCardDiv>
         </section>
