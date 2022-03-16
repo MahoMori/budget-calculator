@@ -32,8 +32,13 @@ function App() {
   const [isChangingBudget, setIsChangingBudget] = useState<boolean>(false);
 
   let oldBudget: number = 0;
-  const handleChangingBudget = (budget: string): void => {
+  const handleChangingBudget = (): void => {
     isChangingBudget ? setIsChangingBudget(false) : setIsChangingBudget(true);
+
+    if (budget === "") {
+      setBudget(budgetCalcState.budget);
+    }
+
     oldBudget = parseFloat(budgetCalcState.budget);
   };
 
@@ -64,6 +69,8 @@ function App() {
 
   // +++++ recalculate budget +++++
   const recalcBudget = (): void => {
+    // console.log(budget);
+
     let newBudget: number = parseFloat(budget);
     let currentTotal: number = 0;
 
@@ -85,7 +92,7 @@ function App() {
   // +++++ reset +++++
   const handleReset = (): void => {
     if (window.confirm("Do you want to reset all?")) {
-      // setBudget("0.00");
+      setBudget("0.00");
       dispatch(changeBudget("0.00"));
       dispatch(resetItems());
 
@@ -206,7 +213,7 @@ function App() {
                 <button
                   type="button"
                   onClick={() => {
-                    handleChangingBudget(budgetCalcState.budget);
+                    handleChangingBudget();
                     recalcBudget();
                   }}
                 >
@@ -219,10 +226,7 @@ function App() {
                   <p>$&nbsp;</p>
                   <p>{budgetCalcState.budget}</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleChangingBudget(budgetCalcState.budget)}
-                >
+                <button type="button" onClick={handleChangingBudget}>
                   Change budget
                 </button>
               </>
