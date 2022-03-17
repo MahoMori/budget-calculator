@@ -62,15 +62,11 @@ function App() {
       totalBudget += itemPriceNum;
     }
 
-    // setBudget(addZero(totalBudget.toString()));
-
     dispatch(changeBudget(addZero(totalBudget.toString())));
   };
 
   // +++++ recalculate budget +++++
   const recalcBudget = (): void => {
-    // console.log(budget);
-
     let newBudget: number = parseFloat(budget);
     let currentTotal: number = 0;
 
@@ -84,8 +80,6 @@ function App() {
       }
     }
 
-    // setBudget(addZero(newBudget.toString()));
-
     dispatch(changeBudget(addZero(newBudget.toString())));
   };
 
@@ -95,14 +89,10 @@ function App() {
       setBudget("0.00");
       dispatch(changeBudget("0.00"));
       dispatch(resetItems());
-
-      // setItems([]);
     }
   };
 
   // +++++ items, input field, add item +++++
-  // const [items, setItems] = useState<Item[]>([]);
-
   const [inputItem, setInputItem] = useState<Item>({
     name: "",
     price: "",
@@ -170,8 +160,6 @@ function App() {
       inputItem.id = uuid();
       checkBudget(inputItem.price, "add");
 
-      // setItems((prev) => [...prev, inputItem]);
-
       dispatch(addItem(inputItem));
       setInputItem({ name: "", price: "", id: "" });
     } else {
@@ -206,7 +194,6 @@ function App() {
                       e: React.ChangeEvent<HTMLInputElement>
                     ): void => {
                       setBudget(e.target.value);
-                      // dispatch(changeBudget(e.target.value));
                     }}
                   />
                 </div>
@@ -267,8 +254,6 @@ function App() {
                 <ItemComponent
                   key={item.id}
                   item={item}
-                  // items={items}
-                  // setItems={setItems}
                   checkNum={checkNum}
                   checkBudget={checkBudget}
                 />

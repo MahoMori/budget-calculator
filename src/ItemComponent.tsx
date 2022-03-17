@@ -17,8 +17,6 @@ import {
 
 type Props = {
   item: Item;
-  // items: Item[];
-  // setItems: React.Dispatch<React.SetStateAction<Item[]>>;
   checkNum: (price: string) => string;
   checkBudget: (
     itemPrice: string,
@@ -27,13 +25,7 @@ type Props = {
   ) => void;
 };
 
-const ItemComponent: React.VFC<Props> = ({
-  item,
-  // items,
-  // setItems,
-  checkNum,
-  checkBudget,
-}) => {
+const ItemComponent: React.VFC<Props> = ({ item, checkNum, checkBudget }) => {
   // +++++ redux toolkit +++++
   const dispatch = useDispatch();
   const budgetCalcState = useSelector((state: TStore) => state.budgetCalc);
@@ -77,12 +69,6 @@ const ItemComponent: React.VFC<Props> = ({
         checkBudget(originalItem.price, "edit", checkedNum);
       }
 
-      // setItems((prev) => {
-      //   return prev.map((item) =>
-      //     item.id === editingItem.id ? { ...editingItem } : item
-      //   );
-      // });
-
       dispatch(editItem(editingItem));
     } else {
       alert("Not a valid input.");
@@ -93,17 +79,12 @@ const ItemComponent: React.VFC<Props> = ({
   const handleDelete = (delItem: Item): void => {
     checkBudget(delItem.price, "delete");
 
-    // setItems((prev) => {
-    //   return prev.filter((item) => item.id !== delItem.id);
-    // });
-
     dispatch(deleteItem(delItem.id));
 
     if (isEditing === true) {
       setIsEditing(false);
       setEditingItem({ name: "", price: "", id: "" });
     }
-    
   };
 
   return (
@@ -135,10 +116,7 @@ const ItemComponent: React.VFC<Props> = ({
           </EditPriceDiv>
           <ItemIconsDiv>
             <span></span>
-            <button
-              type="submit"
-              // onClick={() => handleIsEditing(item)}
-            >
+            <button type="submit">
               <DoneIcon />
             </button>
             <button type="button" onClick={() => handleDelete(item)}>
@@ -159,8 +137,6 @@ const ItemComponent: React.VFC<Props> = ({
               <EditIcon />
             </button>
             <button type="button" onClick={() => handleDelete(item)}>
-              {/* <FontAwesomeIcon icon={faCircleMinus} /> */}
-              {/* Delete */}
               <DeleteIcon />
             </button>
           </ItemIconsDiv>
