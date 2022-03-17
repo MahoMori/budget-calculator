@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import { color, addInputStyle, CardDiv } from "./styleVariable";
-import { device } from "./screenSize";
+import { color, inputStyle } from "./styleVariable";
 
 import { FaCheck } from "react-icons/fa";
 import { RiEdit2Fill } from "react-icons/ri";
@@ -12,13 +11,21 @@ export const EditPriceDiv = styled.div`
   margin: 0.5rem 0;
 
   & p {
-    font-size: ${addInputStyle.fontSize};
+    font-size: ${inputStyle.fontSize};
   }
 `;
 
 export const ItemDetailDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 80% 20%;
+
+  & p:first-child {
+    overflow-wrap: break-word;
+  }
+
+  & p:last-child {
+    text-align: right;
+  }
 `;
 
 export const ItemIconsDiv = styled.div`

@@ -115,7 +115,7 @@ function App() {
     setInputItem((prev) => ({ ...prev, [name]: value }));
   };
 
-  // +++++ check if input is number or . +++++
+  // +++++ check if input is number and/or . +++++
   const checkNum = (price: string): string => {
     if (price.match(/^[0-9.]*$/) !== null) {
       return addZero(price);

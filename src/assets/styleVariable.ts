@@ -7,9 +7,8 @@ export const color = {
   delete: "#e6372c",
 };
 
-export const addInputStyle = {
+export const inputStyle = {
   borderStyle: "solid",
-  borderColor: `${color.add}`,
   borderRadius: "0.2rem",
   padding: "0 0.2rem",
   fontSize: "1rem",

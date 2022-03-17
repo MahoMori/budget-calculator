@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { color, addInputStyle, CardDiv } from "./styleVariable";
+import { color, inputStyle, CardDiv } from "./styleVariable";
 import { device } from "./screenSize";
 
 export const BudgetCalcMain = styled.main`
@@ -104,11 +104,11 @@ export const AddCardDiv = styled(CardDiv)`
 
   & form div input {
     width: 100%;
-    border-style: ${addInputStyle.borderStyle};
-    border-color: ${addInputStyle.borderColor};
-    border-radius: ${addInputStyle.borderRadius};
-    padding: ${addInputStyle.padding};
-    font-size: ${addInputStyle.fontSize};
+    border-color: ${color.add};
+    border-style: ${inputStyle.borderStyle};
+    border-radius: ${inputStyle.borderRadius};
+    padding: ${inputStyle.padding};
+    font-size: ${inputStyle.fontSize};
   }
 
   & form button {
@@ -127,15 +127,15 @@ export const AddPriceDiv = styled.div`
   margin-top: 0.5rem;
 
   & p {
-    font-size: ${addInputStyle.fontSize};
+    font-size: ${inputStyle.fontSize};
   }
 
   & input {
-    border-style: ${addInputStyle.borderStyle};
-    border-color: ${addInputStyle.borderColor};
-    border-radius: ${addInputStyle.borderRadius};
-    padding: ${addInputStyle.padding};
-    font-size: ${addInputStyle.fontSize};
+    border-color: ${color.add};
+    border-style: ${inputStyle.borderStyle};
+    border-radius: ${inputStyle.borderRadius};
+    padding: ${inputStyle.padding};
+    font-size: ${inputStyle.fontSize};
   }
 `;
 
@@ -146,10 +146,10 @@ export const ItemContainerCardDiv = styled(CardDiv)`
 
   & form input {
     width: 100%;
-    border-style: ${addInputStyle.borderStyle};
     border-color: ${color.edit};
-    border-radius: ${addInputStyle.borderRadius};
-    padding: ${addInputStyle.padding};
-    font-size: ${addInputStyle.fontSize};
+    border-style: ${inputStyle.borderStyle};
+    border-radius: ${inputStyle.borderRadius};
+    padding: ${inputStyle.padding};
+    font-size: ${inputStyle.fontSize};
   }
 `;
